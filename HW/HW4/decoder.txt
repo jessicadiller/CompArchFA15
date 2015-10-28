@@ -1,0 +1,4 @@
+The input enable can only be 1 or 0 and thus can only enable one bit.
+The address can be any number represented by 5 bits. 
+The "enable" bit is shifted the amount down to the address number and sets that to the output address.
+It's similar to the decoder picking which bit output by the input bit combinations.
