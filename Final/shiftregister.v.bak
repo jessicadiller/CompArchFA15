@@ -1,0 +1,51 @@
+//------------------------------------------------------------------------
+// Shift Register
+//   Parameterized width (in bits)
+//   Shift register can operate in two modes:
+//      - serial in, parallel out
+//      - parallel in, serial out
+//------------------------------------------------------------------------
+
+module shiftregister
+#(parameter width = 10)
+(
+input               clk,                // FPGA Clock
+input               peripheralClkEdge,  // Edge indicator - when this goes high, load whatever serial data is
+input               parallelLoad,       // 1 = Load shift reg with parallelDataIn
+input  [width-1:0]  parallelDataIn,     // Load shift reg in parallel
+input               serialDataIn,       // Load shift reg serially
+output reg [width-1:0]  parallelDataOut,    // Shift reg data contents
+output reg             serialDataOut       // Positive edge synchronized
+);
+
+    reg [width-1:0]      shiftregistermem;
+    always @(posedge clk) begin
+        // Your Code Here
+	// this is basically 8 flip flops in a row
+
+	if (peripheralClkEdge == 1) begin //when the peripheralClkEdge goes high
+	//serial load to LSB  here
+	shiftregistermem <= {shiftregistermem[width-2:0], serialDataIn};
+	end
+
+	if (parallelLoad == 1) begin
+	//load it in parallel
+	$display ("paralleldatain is %d%d%d%d%d%d%d%d%d%d", parallelDataIn[0], parallelDataIn[1], parallelDataIn[2], parallelDataIn[3], parallelDataIn[4], parallelDataIn[5], parallelDataIn[6], parallelDataIn[7], parallelDataIn[8], parallelDataIn[9]);
+	shiftregistermem <= parallelDataIn;
+	end
+	//assign the right numbers to the outputs every clock cycle
+	parallelDataOut <= shiftregistermem[7:0];
+	$display ("shiftregistermem 0 is %d", shiftregistermem[0]);
+	$display ("shiftregistermem 1 is %d", shiftregistermem[1]);
+	$display ("shiftregistermem 2 is %d", shiftregistermem[2]);
+	$display ("shiftregistermem 3 is %d", shiftregistermem[3]);
+	$display ("shiftregistermem 4 is %d", shiftregistermem[4]);
+	$display ("shiftregistermem 5 is %d", shiftregistermem[5]);
+	$display ("shiftregistermem 6 is %d", shiftregistermem[6]);
+	$display ("shiftregistermem 7 is %d", shiftregistermem[7]);
+	$display ("shiftregistermem 8 is %d", shiftregistermem[8]);
+	$display ("shiftregistermem 9 is %d", shiftregistermem[9]);
+	serialDataOut <= shiftregistermem[width-1];
+	$display ("serialDataOut is %d", serialDataOut);
+    end
+endmodule
